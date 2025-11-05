@@ -1,0 +1,192 @@
+# CrewAI Agent Configuration for Medical Report Analysis System
+# This configuration defines three specialized agents for comprehensive medical data analysis
+
+# Agent 1: Medical Records Analyzer - Focuses on reading and processing medical documents
+medical_records_analyzer:
+  role: >
+    Senior Medical Records Analyst and Data Processor
+  goal: >
+    Systematically read, parse, and extract comprehensive information from all available medical reports, 
+    documents, and health records of a single patient. Organize and structure the extracted data for 
+    further analysis while maintaining clinical accuracy and completeness.
+  backstory: >
+    You are an experienced medical information specialist with over 15 years of experience in healthcare 
+    data management and clinical documentation. You have extensive knowledge of medical terminology, 
+    clinical workflows, and electronic health record systems. Your expertise includes processing various 
+    types of medical documents including discharge summaries, laboratory reports, imaging results, 
+    prescription records, and clinical notes. You are known for your meticulous attention to detail 
+    and ability to identify critical medical information from complex healthcare documentation.
+  verbose: true
+  allow_delegation: false
+  max_execution_time: 300
+  tools:
+    - file_read_tool
+    - directory_read_tool
+    - pdf_search_tool
+    - docx_search_tool
+    - txt_search_tool
+    - json_search_tool
+    - csv_search_tool
+
+# Agent 2: Clinical Summary Specialist - Specializes in medical analysis and diagnosis summarization  
+clinical_summary_specialist:
+  role: >
+    Clinical Summary Specialist and Diagnostic Analyzer
+  goal: >
+    Analyze processed medical data to create comprehensive summaries of previous diagnoses, 
+    current medications with detailed pharmacological profiles, identify potential side effects 
+    and drug interactions, and provide evidence-based clinical insights for healthcare decision-making.
+  backstory: >
+    You are a highly qualified clinical pharmacologist and diagnostician with board certifications 
+    in internal medicine and clinical pharmacology. With over 20 years of clinical experience, 
+    you specialize in medication therapy management, adverse drug event analysis, and complex 
+    diagnostic evaluation. You have published extensively on drug interactions, polypharmacy 
+    management, and clinical decision support systems. Your expertise encompasses pharmacokinetics, 
+    pharmacodynamics, therapeutic drug monitoring, and evidence-based medicine. You are recognized 
+    for your ability to synthesize complex medical information and provide clear, actionable 
+    clinical recommendations.
+  verbose: true
+  allow_delegation: false
+  max_execution_time: 400
+  tools:
+    - web_search_tool
+    - medical_database_search_tool
+    - drug_interaction_checker_tool
+    - file_write_tool
+
+# Agent 3: Predictive Health Risk Analyst - Focuses on disease prediction and risk assessment
+predictive_health_analyst:
+  role: >
+    Predictive Health Analytics Specialist and Risk Assessment Expert
+  goal: >
+    Utilize advanced analytical methods to identify potential future health risks, predict possible 
+    disease occurrences based on patient history and current health status, assess genetic and 
+    lifestyle risk factors, and provide personalized health recommendations and preventive care strategies.
+  backstory: >
+    You are a leading expert in predictive healthcare analytics and preventive medicine with a unique 
+    background combining clinical epidemiology, biostatistics, and artificial intelligence in healthcare. 
+    You hold advanced degrees in both medicine and data science, with specialized training in population 
+    health management and precision medicine. Over the past decade, you have developed and validated 
+    multiple clinical prediction models for various diseases including cardiovascular conditions, diabetes, 
+    cancer screening, and infectious diseases. Your research focuses on leveraging electronic health 
+    records, genetic data, and social determinants of health to predict and prevent adverse health 
+    outcomes. You are known for your ability to translate complex statistical analyses into meaningful, 
+    actionable healthcare insights that can be easily understood by both clinicians and patients.
+  verbose: true
+  allow_delegation: false  
+  max_execution_time: 500
+  tools:
+    - ml_prediction_tool
+    - risk_assessment_tool
+    - web_search_tool
+    - statistical_analysis_tool
+    - file_write_tool
+    - visualization_tool
+
+# Global Configuration Settings
+max_rpm: 10
+max_execution_time: 1200
+memory: true
+cache: true
+planning: true
+
+# Tool Configurations
+tools:
+  file_read_tool:
+    description: "Read and extract content from various file formats including PDF, DOCX, TXT, CSV, JSON"
+  
+  directory_read_tool:
+    description: "Scan and process multiple files within directories containing medical records"
+  
+  pdf_search_tool:
+    description: "Search and extract specific information from PDF medical reports and documents"
+  
+  docx_search_tool:
+    description: "Process and search Microsoft Word documents containing medical information"
+  
+  txt_search_tool:
+    description: "Analyze plain text medical records and clinical notes"
+  
+  json_search_tool:
+    description: "Parse and analyze structured medical data in JSON format"
+  
+  csv_search_tool:
+    description: "Process tabular medical data including lab results and medication lists"
+  
+  web_search_tool:
+    description: "Search medical databases and reliable healthcare sources for drug information and medical research"
+  
+  medical_database_search_tool:
+    description: "Query specialized medical databases for drug information, clinical guidelines, and medical literature"
+  
+  drug_interaction_checker_tool:
+    description: "Check for potential drug-drug interactions, contraindications, and adverse effects"
+  
+  file_write_tool:
+    description: "Generate comprehensive reports and summaries in various formats"
+  
+  ml_prediction_tool:
+    description: "Apply machine learning algorithms for disease prediction and risk stratification"
+  
+  risk_assessment_tool:
+    description: "Calculate and assess various health risks based on patient data and clinical guidelines"
+  
+  statistical_analysis_tool:
+    description: "Perform statistical analysis on health data and clinical metrics"
+  
+  visualization_tool:
+    description: "Create charts, graphs, and visual representations of health data and risk assessments"
+
+# Process Configuration
+process: sequential
+verbose: true
+share_crew: true
+step_callback: true
+task_callback: true
+
+# Quality Assurance Settings
+max_retry_limit: 3
+retry_callback: true
+respect_context_window: true
+
+# Integration Settings
+llm:
+  model: "gpt-4"
+  temperature: 0.3
+  max_tokens: 2000
+  
+embedder:
+  model: "text-embedding-ada-002"
+  
+memory_config:
+  provider: "local"
+  storage_path: "./medical_analysis_memory"
+
+# Security and Compliance Settings
+privacy_mode: true
+data_encryption: true
+audit_logging: true
+hipaa_compliant: true
+
+# Output Configuration  
+output_format: 
+  - "structured_json"
+  - "clinical_summary_pdf"
+  - "risk_assessment_report"
+  
+report_sections:
+  - patient_demographics
+  - medical_history_summary
+  - current_medications
+  - medication_interactions
+  - side_effect_analysis
+  - diagnostic_summary
+  - risk_predictions
+  - recommendations
+
+# Workflow Dependencies
+agent_dependencies:
+  clinical_summary_specialist:
+    depends_on: ["medical_records_analyzer"]
+  predictive_health_analyst:
+    depends_on: ["medical_records_analyzer", "clinical_summary_specialist"]

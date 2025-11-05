@@ -1,0 +1,223 @@
+# CrewAI Tasks Configuration for Medical Report Analysis System
+# This configuration defines the specific tasks each agent will perform
+
+# Task 1: Medical Document Processing and Data Extraction
+medical_document_processing:
+  description: >
+    Systematically read and process all available medical reports, documents, and health records 
+    for a single patient. Extract and organize comprehensive medical information including:
+    - Patient demographic information and medical history
+    - All documented diagnoses (past and present) with ICD-10 codes where available
+    - Complete medication lists with dosages, frequencies, and administration routes
+    - Laboratory test results and trending patterns over time
+    - Imaging study results and interpretations  
+    - Surgical procedures and interventions performed
+    - Allergies and adverse drug reactions previously documented
+    - Family medical history and genetic predispositions
+    - Social history including lifestyle factors affecting health
+    - Clinical notes and physician observations
+    
+    Ensure all extracted information maintains clinical accuracy, proper medical terminology,
+    and is structured in a standardized format for subsequent analysis.
+
+  expected_output: >
+    A comprehensive structured dataset containing all extracted medical information organized into
+    standardized categories: demographics, diagnoses, medications, lab results, imaging, procedures,
+    allergies, family history, social history, and clinical observations. The output should be
+    formatted as structured JSON with proper medical coding (ICD-10, CPT, NDC) where applicable
+    and include data quality indicators and completeness metrics.
+
+  agent: medical_records_analyzer
+  tools:
+    - file_read_tool
+    - directory_read_tool  
+    - pdf_search_tool
+    - docx_search_tool
+    - txt_search_tool
+    - json_search_tool
+    - csv_search_tool
+  priority: high
+  max_execution_time: 300
+
+# Task 2: Clinical Analysis and Medication Assessment
+clinical_medication_analysis:
+  description: >
+    Perform comprehensive clinical analysis of the processed medical data to generate detailed
+    summaries and assessments including:
+    
+    DIAGNOSIS SUMMARY:
+    - Chronological summary of all previous diagnoses
+    - Current active medical conditions and their management status
+    - Diagnostic accuracy assessment and potential missed diagnoses
+    - Differential diagnosis considerations for complex cases
+    
+    MEDICATION ANALYSIS:
+    - Complete current medication profile with therapeutic classifications
+    - Medication adherence patterns and compliance issues
+    - Dosage appropriateness based on patient characteristics
+    - Therapeutic duplication identification
+    
+    SIDE EFFECTS AND INTERACTIONS:
+    - Comprehensive drug-drug interaction analysis using latest clinical databases
+    - Drug-disease interaction assessment
+    - Known and potential adverse drug reactions based on patient history
+    - Contraindications and precautions for current medications
+    - Side effect probability scoring for each medication
+    
+    CLINICAL RECOMMENDATIONS:
+    - Evidence-based medication optimization suggestions
+    - Therapeutic alternative recommendations where appropriate
+    - Monitoring requirements for high-risk medications
+    - Dosage adjustment recommendations based on patient factors
+
+  expected_output: >
+    A detailed clinical analysis report containing: (1) Structured diagnosis summary with severity
+    classifications and treatment status, (2) Comprehensive medication assessment with therapeutic
+    categories and clinical rationales, (3) Drug interaction matrix with risk levels and clinical
+    significance, (4) Side effect probability profiles for each medication, (5) Evidence-based
+    clinical recommendations with supporting literature references. Format as clinical-grade PDF
+    report suitable for healthcare provider review.
+
+  agent: clinical_summary_specialist
+  tools:
+    - web_search_tool
+    - medical_database_search_tool
+    - drug_interaction_checker_tool
+    - file_write_tool
+  depends_on: [medical_document_processing]
+  priority: high
+  max_execution_time: 400
+
+# Task 3: Predictive Health Risk Assessment and Future Disease Prediction
+predictive_risk_assessment:
+  description: >
+    Utilize advanced analytical methods and clinical prediction models to assess future health
+    risks and predict potential disease occurrences based on comprehensive patient data analysis:
+    
+    RISK STRATIFICATION:
+    - Cardiovascular disease risk calculation using validated algorithms (Framingham, ASCVD)
+    - Diabetes risk assessment based on metabolic markers and family history
+    - Cancer screening recommendations based on age, gender, and risk factors
+    - Infectious disease susceptibility analysis
+    - Mental health risk indicators and screening recommendations
+    
+    DISEASE PREDICTION MODELING:
+    - Apply machine learning algorithms to predict disease progression
+    - Identify early warning signs of potential health deterioration
+    - Calculate probability scores for common age-related diseases
+    - Assess medication-induced disease risks
+    
+    GENETIC AND LIFESTYLE RISK ANALYSIS:
+    - Hereditary disease risk assessment based on family history
+    - Lifestyle factor impact analysis (smoking, alcohol, diet, exercise)
+    - Environmental risk factor evaluation
+    - Social determinants of health assessment
+    
+    PERSONALIZED PREVENTION STRATEGIES:
+    - Develop evidence-based prevention recommendations
+    - Create personalized screening schedules based on risk profiles
+    - Suggest lifestyle modifications with quantified health impact
+    - Recommend preventive medications where clinically indicated
+    
+    PREDICTIVE ANALYTICS:
+    - Hospital readmission risk prediction
+    - Adverse drug event probability calculations
+    - Medication adherence prediction modeling
+    - Healthcare utilization forecasting
+
+  expected_output: >
+    A comprehensive predictive health assessment report including: (1) Multi-disease risk scores
+    with confidence intervals and time horizons, (2) Personalized disease prediction probabilities
+    with supporting clinical evidence, (3) Risk factor analysis with modifiable vs non-modifiable
+    classifications, (4) Evidence-based prevention and intervention recommendations ranked by
+    clinical impact, (5) Interactive risk visualization charts and trend analysis, (6) Personalized
+    health monitoring schedule with recommended screening intervals. Deliver as an executive summary
+    with detailed appendices containing statistical analyses and clinical references.
+
+  agent: predictive_health_analyst  
+  tools:
+    - ml_prediction_tool
+    - risk_assessment_tool
+    - web_search_tool
+    - statistical_analysis_tool
+    - file_write_tool
+    - visualization_tool
+  depends_on: [medical_document_processing, clinical_medication_analysis]
+  priority: high
+  max_execution_time: 500
+
+# Task 4: Comprehensive Medical Summary Report Generation
+comprehensive_report_generation:
+  description: >
+    Synthesize all analyses and findings from the previous tasks to create a comprehensive,
+    clinically-relevant medical summary report that integrates:
+    - Complete patient medical profile with timeline visualization
+    - Integrated diagnosis and treatment summary with outcomes tracking
+    - Medication optimization recommendations with safety profiles
+    - Predictive health insights with actionable intervention strategies
+    - Clinical decision support recommendations for healthcare providers
+    - Patient-friendly health summary with personalized guidance
+    
+    The report should be structured for multiple audiences including healthcare providers,
+    patients, and healthcare administrators, with appropriate clinical language and
+    health literacy considerations.
+
+  expected_output: >
+    A multi-format comprehensive medical analysis package containing: (1) Executive summary
+    for clinical decision-makers, (2) Detailed clinical report for healthcare providers with
+    evidence-based recommendations, (3) Patient-friendly summary with visual health indicators
+    and actionable guidance, (4) Risk stratification dashboard with trend analysis, 
+    (5) Medication safety profile with monitoring recommendations, (6) Structured data export
+    for EHR integration. All outputs should be HIPAA-compliant and include appropriate
+    disclaimers for clinical use.
+
+  agent: clinical_summary_specialist
+  tools:
+    - file_write_tool
+    - visualization_tool
+    - pdf_generation_tool
+    - data_export_tool
+  depends_on: [medical_document_processing, clinical_medication_analysis, predictive_risk_assessment]
+  priority: medium
+  max_execution_time: 200
+
+# Global Task Configuration
+task_execution_settings:
+  max_retry_attempts: 3
+  timeout_buffer: 60
+  parallel_execution: false
+  checkpoint_enabled: true
+  error_handling: comprehensive
+  
+validation_settings:
+  clinical_accuracy_check: true
+  data_quality_validation: true
+  completeness_assessment: true
+  cross_reference_verification: true
+
+output_quality_controls:
+  medical_terminology_validation: true
+  citation_verification: true
+  evidence_level_assessment: true
+  clinical_guideline_compliance: true
+
+# Integration and Callback Settings
+callbacks:
+  task_completion_notification: true
+  progress_monitoring: true
+  quality_assurance_checkpoints: true
+  clinical_validation_alerts: true
+
+# Privacy and Security
+privacy_controls:
+  phi_protection: true
+  data_anonymization_options: true
+  audit_trail_logging: true
+  access_control_integration: true
+
+# Performance Monitoring
+performance_metrics:
+  processing_time_tracking: true
+  accuracy_measurement: true
+  completeness_scoring: true
+  clinical_relevance_rating: true
